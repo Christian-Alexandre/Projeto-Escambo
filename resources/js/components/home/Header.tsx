@@ -28,17 +28,14 @@ export default function Header() {
                     <div className="flex items-center justify-between">
 
                         {/* Logo */}
-                        <h1
-                            className="text-2xl md:text-3xl font-black"
-                            style={{
-                                WebkitTextStroke: '2px black',
-                                textShadow: '2px 2px 0px rgba(0,0,0,0.3)',
-                                fontFamily: 'Impact, Arial Black, sans-serif',
-                                color: '#f5f5dc',
-                            }}
-                        >
-                            ESCAMBO
-                        </h1>
+                        <Link href="/" className="flex items-center">
+                        <img
+                            src="/logo.png"
+                            alt="Escambo Logo"
+                            className="h-10 md:h-14 object-contain cursor-pointer select-none"
+                            draggable="false"
+                        />
+                        </Link>
 
                         {/* Search Bar */}
                         <div className="flex items-center gap-3 flex-1 max-w-2xl mx-4">

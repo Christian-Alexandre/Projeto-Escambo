@@ -2,16 +2,26 @@ import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 
-interface Product {
-    image: string;
-    title: string;
-    seller: string;
-    location: string;
+interface CarouselProduct {
+    // Formato antigo (home estático)
+    image?: string;
+    title?: string;
+    seller?: string;
+    location?: string;
+
+    // Formato novo (anúncios reais)
+    id?: number;
+    titulo?: string;
+    imagem?: string | null;
+    localizacao?: string | null;
+    user?: {
+        name?: string;
+    };
 }
 
 interface Props {
     title: string;
-    products: Product[];
+    products: CarouselProduct[];
 }
 
 export default function ProductCarousel({ title, products }: Props) {
@@ -59,7 +69,7 @@ export default function ProductCarousel({ title, products }: Props) {
                 className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-2"
             >
                 {products.map((product, index) => (
-                    <ProductCard key={index} product={product} />
+                    <ProductCard key={product.id ?? index} product={product} />
                 ))}
             </div>
         </section>

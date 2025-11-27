@@ -17,12 +17,15 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
         descricao: anuncio.descricao ?? "",
         localizacao: anuncio.localizacao ?? "",
         imagem: null as File | null,
+        _method: "PUT",
     });
 
+    // preview da imagem atual
     const [preview, setPreview] = useState<string | null>(
-        anuncio.imagem ? `/storage/${anuncio.imagem}` : null
+        anuncio.imagem ? `/anuncios/${anuncio.imagem}` : null
     );
 
+    // manipula upload
     function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -36,11 +39,14 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
         setPreview(URL.createObjectURL(file));
     }
 
+    // ENVIO DO FORMULÁRIO (AQUI ESTAVA O PROBLEMA)
     function submit(e: React.FormEvent) {
         e.preventDefault();
 
+        // ESSENCIAL: Laravel só aceita PUT se estiver DENTRO do FormData
+        setData("_method", "PUT");
+
         post(`/meus-anuncios/${anuncio.id}`, {
-            method: "put",
             forceFormData: true,
         });
     }
@@ -48,34 +54,34 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
     return (
         <div className="min-h-screen bg-gray-200 p-4 md:p-10">
 
-            {/* BOTÃO VOLTAR — IGUAL AO CREATE */}
+            {/* BOTÃO VOLTAR */}
             <div className="max-w-5xl mx-auto mb-4">
                 <Link
                     href="/meus-anuncios"
-                    className="bg-white border border-gray-400 px-6 py-2 rounded-full hover:bg-gray-100 transition text-black"
+                    className="bg-white border border-gray-400 px-6 py-2 rounded-full hover:bg-gray-100 transition text-black font-semibold"
                 >
                     ← Voltar
                 </Link>
             </div>
 
-            {/* CONTAINER PRINCIPAL — IGUAL AO CREATE */}
+            {/* container principal */}
             <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden flex flex-col md:flex-row">
 
-                {/* LADO ESQUERDO (FORMULÁRIO) — IGUAL AO CREATE */}
+                {/* FORMULÁRIO */}
                 <form
                     onSubmit={submit}
-                    className="w-full md:w-2/3 p-6 md:p-10 flex flex-col gap-6"
+                    className="w-full md:w-2/3 p-6 md:p-10 flex flex-col gap-6 text-black"
                 >
-                    <h2 className="text-xl font-bold text-gray-700">Editar Anúncio</h2>
+                    <h2 className="text-xl font-bold text-black">Editar Anúncio</h2>
 
                     {/* Modelo */}
                     <div>
-                        <label className="font-semibold text-sm text-gray-700">
+                        <label className="font-semibold text-sm text-black">
                             Modelo do produto
                         </label>
                         <input
                             type="text"
-                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700"
+                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700 text-black"
                             value={data.titulo}
                             onChange={(e) => setData("titulo", e.target.value)}
                         />
@@ -86,12 +92,12 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
 
                     {/* Categoria */}
                     <div>
-                        <label className="font-semibold text-sm text-gray-700">
+                        <label className="font-semibold text-sm text-black">
                             Categoria
                         </label>
                         <input
                             type="text"
-                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700"
+                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700 text-black"
                             value={data.categoria}
                             onChange={(e) => setData("categoria", e.target.value)}
                         />
@@ -99,12 +105,12 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
 
                     {/* Localização */}
                     <div>
-                        <label className="font-semibold text-sm text-gray-700">
+                        <label className="font-semibold text-sm text-black">
                             Localização
                         </label>
                         <input
                             type="text"
-                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700"
+                            className="w-full mt-1 px-4 py-2 border rounded-full focus:ring-2 focus:ring-red-700 text-black"
                             value={data.localizacao}
                             onChange={(e) => setData("localizacao", e.target.value)}
                         />
@@ -112,18 +118,18 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
 
                     {/* Descrição */}
                     <div>
-                        <label className="font-semibold text-sm text-gray-700">
+                        <label className="font-semibold text-sm text-black">
                             Descrição
                         </label>
                         <textarea
-                            className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700"
+                            className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-700 text-black"
                             rows={3}
                             value={data.descricao}
                             onChange={(e) => setData("descricao", e.target.value)}
                         />
                     </div>
 
-                    {/* Barra de progresso */}
+                    {/* Progress bar */}
                     {progress && (
                         <div className="w-full bg-gray-300 rounded h-3 overflow-hidden">
                             <div
@@ -133,7 +139,7 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
                         </div>
                     )}
 
-                    {/* Botão salvar — igual formato do create */}
+                    {/* Botão salvar */}
                     <button
                         type="submit"
                         disabled={processing}
@@ -145,11 +151,11 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
                     </button>
                 </form>
 
-                {/* LADO DIREITO (IMAGENS) — IGUAL AO CREATE */}
-                <div className="w-full md:w-1/3 bg-gradient-to-b from-red-800 to-red-600 p-8 text-center text-white flex flex-col">
-                    <h2 className="text-2xl font-bold mb-6">Fotos</h2>
+                {/* ÁREA DE FOTOS */}
+                <div className="w-full md:w-1/3 bg-gradient-to-b from-red-800 to-red-600 p-8 text-center flex flex-col">
+                    <h2 className="text-2xl font-bold mb-6 text-white">Fotos</h2>
 
-                    {/* Preview da imagem */}
+                    {/* preview */}
                     <div className="mb-4">
                         {preview ? (
                             <img
@@ -157,14 +163,14 @@ export default function Edit({ anuncio }: { anuncio: Anuncio }) {
                                 className="w-full rounded-lg shadow border"
                             />
                         ) : (
-                            <div className="w-full h-40 rounded-lg bg-white/20 flex items-center justify-center">
+                            <div className="w-full h-40 rounded-lg bg-white/20 flex items-center justify-center text-white">
                                 Nenhuma imagem
                             </div>
                         )}
                     </div>
 
-                    {/* Botão de upload — igual ao create */}
-                    <label className="bg-white text-gray-700 cursor-pointer py-3 rounded-lg shadow font-semibold">
+                    {/* seletor de imagem */}
+                    <label className="bg-white text-black cursor-pointer py-3 rounded-lg shadow font-semibold">
                         Selecionar nova foto
                         <input
                             type="file"
