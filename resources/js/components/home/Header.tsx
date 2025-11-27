@@ -2,6 +2,19 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { MapPin, Bell, MessageCircle, Menu, Search } from 'lucide-react';
 
+// TIPAGEM DEFINITIVA
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
+interface PageProps {
+    auth: {
+        user: User | null;
+    };
+}
+
 export default function Header() {
 
     // pega o usuário autenticado vindo do Inertia::share

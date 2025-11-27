@@ -34,6 +34,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function anuncios()
+    {
+        return $this->hasMany(\App\Models\Anuncio::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

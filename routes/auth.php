@@ -10,10 +10,9 @@ Route::get('login', function (AuthKitLoginRequest $request) {
 })->middleware(['guest'])->name('login');
 
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
-    $request->authenticate();   // autentica WorkOS
-    return redirect()->route('home'); // volta para a Home
+    $request->authenticate();
+    return redirect()->route('home');
 })->middleware(['guest']);
-
 
 Route::post('logout', function (AuthKitLogoutRequest $request) {
     return $request->logout();
